@@ -18,6 +18,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IOrdemServicoRepository, OrdemServicoRepository>();
 builder.Services.AddScoped<IOrdemServicoService, OrdemServicoService>();
 
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
