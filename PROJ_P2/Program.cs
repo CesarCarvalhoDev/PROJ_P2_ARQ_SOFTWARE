@@ -15,6 +15,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Injeção de Dependência (Repositories e Services)
+builder.Services.AddScoped<IMecanicoRepository, MecanicoRepository>();
+builder.Services.AddScoped<IMecanicoService, MecanicoService>();
+
 builder.Services.AddScoped<IOrdemServicoRepository, OrdemServicoRepository>();
 builder.Services.AddScoped<IOrdemServicoService, OrdemServicoService>();
 
