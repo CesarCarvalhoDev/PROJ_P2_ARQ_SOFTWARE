@@ -107,3 +107,10 @@ public class OrdemServicoService : IOrdemServicoService
         }
     }
 }
+
+public class RegraDeNegocioException : Exception
+{
+    public RegraDeNegocioException(string mensagem) : base(mensagem)
+    {
+    }
+}
