@@ -59,7 +59,7 @@ public class OrdemServicoController : ControllerBase
         try
         {
             ordemServico.Id = id;
-            var atualizada = await _service.FecharOrdemAsync(ordemServico);
+            var atualizada = await _service.AtualizarAsync(ordemServico);
 
             if (atualizada is null)
             {
@@ -76,12 +76,11 @@ public class OrdemServicoController : ControllerBase
 
     // PATCH: api/OrdemServico/5/fechar
     [HttpPatch("{id:int}/fechar")]
-    public async Task<ActionResult<OrdemServico>> FecharOrdem(int id, [FromBody] OrdemServico ordemServico)
+    public async Task<ActionResult<OrdemServico>> FecharOrdem(int id)
     {
         try
         {
-            ordemServico.Id = id;
-            var fechada = await _service.FecharOrdemAsync(ordemServico);
+            var fechada = await _service.FecharOrdemAsync(id);
 
             if (fechada is null)
             {
