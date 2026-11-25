@@ -32,6 +32,8 @@ public class OrdemServicoService : IOrdemServicoService
         await ValidarRegrasAsync(ordemServico, idIgnorado: null);
 
         ordemServico.Id = 0;
+        ordemServico.Mecanico = null;
+        ordemServico.Carro = null;
         _repositorio.Adicionar(ordemServico);
         await _repositorio.SalvarAsync();
 
@@ -39,7 +41,7 @@ public class OrdemServicoService : IOrdemServicoService
     }
 
     // Devolve null quando a OrdemServico não existe
-    public async Task<OrdemServico?> FecharOrdemAsync(OrdemServico ordemServicoAtualizado)
+    public async Task<OrdemServico?> AtualizarAsync(OrdemServico ordemServicoAtualizado)
     {
         var ordemServico = await _repositorio.ObterAsync(ordemServicoAtualizado.Id);
 
@@ -62,6 +64,34 @@ public class OrdemServicoService : IOrdemServicoService
         return ordemServico;
     }
 
+    // Fecha a ordem usando apenas o ID e preenchendo a data de término automaticamente
+    public async Task<OrdemServico?> FecharOrdemAsync(int id)
+    {
+        var ordemServico = await _repositorio.ObterAsync(id);
+
+        if (ordemServico is null)
+        {
+            return null;
+        }
+
+        if (ordemServico.Termino is not null)
+        {
+            throw new RegraDeNegocioException("Esta Ordem de Serviço já está fechada.");
+        }
+
+        var agora = DateTime.UtcNow;
+
+        if (agora < ordemServico.Inicio)
+        {
+            throw new RegraDeNegocioException("A data de término não pode ser anterior à data de início.");
+        }
+
+        ordemServico.Termino = agora;
+        await _repositorio.SalvarAsync();
+
+        return ordemServico;
+    }
+
     // Devolve false quando a OrdemServico não existe
     public async Task<bool> RemoverAsync(int id)
     {
@@ -79,7 +109,7 @@ public class OrdemServicoService : IOrdemServicoService
     }
 
     // As regras de negócio moram aqui, num lugar só.
-    // idIgnorado: no fechamento/atualização, a própria OrdemServico não conta como duplicada.
+    // idIgnorado: na atualização, a própria OrdemServico não conta como duplicada.
     private async Task ValidarRegrasAsync(OrdemServico ordemServico, int? idIgnorado)
     {
         // Regra 1: não permitir número de ordem duplicado
