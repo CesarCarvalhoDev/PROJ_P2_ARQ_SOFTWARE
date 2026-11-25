@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace PROJ_P2.Models;
 
 public class OrdemServico
@@ -9,8 +11,12 @@ public class OrdemServico
     public DateTime? Termino { get; set; }
 
     public int MecanicoId { get; set; }
+
+    [JsonIgnore]
     public Mecanico? Mecanico { get; set; }
 
     public int CarroId { get; set; }
+
+    [JsonIgnore]
     public Carro? Carro { get; set; }
 }
